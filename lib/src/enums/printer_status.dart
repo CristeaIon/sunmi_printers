@@ -1,0 +1,16 @@
+// ignore_for_file: constant_identifier_names
+
+enum PrinterStatus {
+  NORMAL,
+  PREPARING,
+  ABNORMAL_COMUNICATION,
+  OUT_OF_PAPER,
+  OVERHEATED,
+  OPENED_LID,
+  ABNORMAL_CUTTER,
+  CUTTER_RECOVERED,
+  NO_BLACK_MARK,
+  NOT_DETECTED,
+  FAILED_FIRMWARE_UPGRADE,
+  UNKNOWN,
+}

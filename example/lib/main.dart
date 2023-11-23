@@ -17,7 +17,11 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   bool _hasPrinter = false;
-  PrinterStatus _status = PrinterStatus.unknown;
+  PrinterStatus _status = PrinterStatus.UNKNOWN;
+  String? _serial = 'unknown';
+  String? _modal = 'unknown';
+  String? _version = 'unknown';
+  String? _serviceVersion = 'unknown';
   final _sunmiPrintersPlugin = SunmiPrinters();
 
   @override
@@ -30,14 +34,21 @@ class _MyAppState extends State<MyApp> {
   Future<void> initPlatformState() async {
     bool hasPrinter;
     PrinterStatus status;
+    String? serial;
+    String? modal;
+    String? version;
+    String? serviceVersion;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
       hasPrinter = await _sunmiPrintersPlugin.hasPrinter();
       status = await _sunmiPrintersPlugin.getPrinterStatus();
+      serial = await _sunmiPrintersPlugin.getPrinterSerialNumber();
+      version = await _sunmiPrintersPlugin.getPrinterVersion();
+      serviceVersion = await _sunmiPrintersPlugin.getServiceVersion();
     } on PlatformException {
       hasPrinter = false;
-      status = PrinterStatus.unknown;
+      status = PrinterStatus.UNKNOWN;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -48,6 +59,10 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       _hasPrinter = hasPrinter;
       _status = status;
+      _serial = serial;
+      _modal = modal;
+      _version = version;
+      _serviceVersion = serviceVersion;
     });
   }
 
@@ -56,10 +71,27 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Sunmi printer example'),
         ),
         body: Center(
-          child: Text('Printer is connected: $_hasPrinter\n Status: ${_status.name}'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text('Printer is connected: $_hasPrinter'),
+              Text('Printer Status: ${_status.name}'),
+              Text('Printer serial number: $_serial'),
+              Text('Printer modal: $_modal'),
+              Text('Printer version: $_version'),
+              Text('Printer service version: $_serviceVersion'),
+              ElevatedButton(
+                onPressed: () {
+                  _sunmiPrintersPlugin.printText('text');
+                },
+                child: const Text('Print text'),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -7,13 +7,37 @@ import 'package:pigeon/pigeon.dart';
   kotlinOptions: KotlinOptions(),
   dartPackageName: 'sunmi_printers',
 ))
-enum PrinterStatus { unknown, normal, outOfPaper, }
-
 @HostApi()
 abstract class SunmiPrinterApi {
-  
   bool hasPrinter();
 
-  
-  PrinterStatus getPrinterStatus();
+  int? getPrinterStatus();
+
+  void printerInit();
+
+  void printerSelfChecking();
+
+  String? getPrinterSerialNumber();
+
+  String? getPrinterModal();
+
+  String? getPrinterVersion();
+
+  String? getServiceVersion();
+
+  int? getPrintedLength();
+
+  int? getPrinterPaper();
+
+  void printText(String text);
+
+  void sendRAWData(Uint8List bytes);
+
+  void setPrinterStyle(int key, int value);
+
+  int? getPrinterMode();
+
+  int? getPrinterBBMDistance();
+
+  void setAlignment(int alignment);
 }

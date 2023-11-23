@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sunmi_printers/sunmi_printers.dart';
 import 'package:sunmi_printers/sunmi_printers_platform_interface.dart';
@@ -10,7 +12,77 @@ class MockSunmiPrintersPlatform with MockPlatformInterfaceMixin implements Sunmi
 
   @override
   Future<PrinterStatus> getPrinterStatus() {
-    return Future.value(PrinterStatus.unknown);
+    return Future.value(PrinterStatus.UNKNOWN);
+  }
+
+  @override
+  Future<int?> getPrintedLength() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<int?> getPrinterBBMDistance() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getPrinterModal() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<int?> getPrinterMode() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<int?> getPrinterPaper() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getPrinterSerialNumber() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getPrinterVersion() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getServiceVersion() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> printText(String text) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> printerInit() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> printerSelfChecking() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> sendRAWData(Uint8List bytes) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setAlignment(TextAlignment alignment) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setPrinterStyle(int key, int value) {
+    throw UnimplementedError();
   }
 }
 
