@@ -1,12 +1,12 @@
 package com.example.sunmi_printers
 
 import SunmiPrinterApi
+import android.util.Log
 import com.sunmi.peripheral.printer.InnerPrinterCallback
 import com.sunmi.peripheral.printer.InnerPrinterManager
 import com.sunmi.peripheral.printer.InnerResultCallback
 import com.sunmi.peripheral.printer.SunmiPrinterService
 import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.plugin.common.MethodChannel
 
 /** SunmiPrintersPlugin */
 class SunmiPrintersPlugin : FlutterPlugin, SunmiPrinterApi {
@@ -18,19 +18,19 @@ class SunmiPrintersPlugin : FlutterPlugin, SunmiPrinterApi {
 
     private val resultCallback = object : InnerResultCallback() {
         override fun onRunResult(isSuccess: Boolean) {
-            TODO("Not yet implemented")
+            Log.d("TAG", "onRunResult: $isSuccess")
         }
 
         override fun onReturnString(result: String?) {
-            TODO("Not yet implemented")
+            Log.d("TAG", "onReturnString: $result")
         }
 
         override fun onRaiseException(code: Int, msg: String?) {
-            TODO("Not yet implemented")
+            Log.d("TAG", "onRaiseException: $code, $msg")
         }
 
         override fun onPrintResult(code: Int, msg: String?) {
-            TODO("Not yet implemented")
+            Log.d("TAG", "onPrintResult: $code, $msg")
         }
 
     }
@@ -54,7 +54,6 @@ class SunmiPrintersPlugin : FlutterPlugin, SunmiPrinterApi {
         InnerPrinterManager.getInstance()
             .bindService(flutterPluginBinding.applicationContext, callback)
     }
-
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
         SunmiPrinterApi.setUp(binding.binaryMessenger, null)
@@ -102,6 +101,7 @@ class SunmiPrintersPlugin : FlutterPlugin, SunmiPrinterApi {
     }
 
     override fun printText(text: String) {
+        Log.d("TAG", "printText: $text")
         printerService?.printText(text, resultCallback)
     }
 
