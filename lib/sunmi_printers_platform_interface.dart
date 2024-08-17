@@ -4,6 +4,7 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 import 'package:sunmi_printers/src/enums/text_alignment.dart';
 
 import 'src/enums/printer_status.dart';
+import 'src/utils/table_column.dart';
 import 'sunmi_printers_method_channel.dart';
 
 abstract class SunmiPrintersPlatform extends PlatformInterface {
@@ -89,5 +90,43 @@ abstract class SunmiPrintersPlatform extends PlatformInterface {
 
   Future<void> setAlignment(TextAlignment alignment) {
     throw UnimplementedError('setAlignment() has not been implemented.');
+  }
+
+  Future<void> printColumnsText(List<TableColumn> columns) {
+    throw UnimplementedError('printColumnsText() has not been implemented.');
+  }
+
+  Future<void> printColumnsString(List<TableColumn> columns) {
+    throw UnimplementedError('printColumnsString() has not been implemented.');
+  }
+
+  Future<void> printImage(Uint8List image) {
+    throw UnimplementedError('printImage() has not been implemented.');
+  }
+
+  Future<void> printImageCustom(Uint8List image) {
+    throw UnimplementedError('printImageCustom() has not been implemented.');
+  }
+  Future<void> printBarCode(Uint8List image) {
+    throw UnimplementedError('printImageCustom() has not been implemented.');
+  }
+  Future<void> printQrCode(Uint8List image) {
+    throw UnimplementedError('printImageCustom() has not been implemented.');
+  }
+
+
+
+  Future<void> enterPrinterBuffer(bool clean) {
+    throw UnimplementedError('enterPrinterBuffer() has not been implemented.');
+  }
+
+  Future<void> exitPrinterBuffer(bool commit) {
+    throw UnimplementedError('exitPrinterBuffer() has not been implemented.');
+  }
+  Future<void> commitPrinterBuffer() {
+    throw UnimplementedError('commitPrinterBuffer() has not been implemented.');
+  }
+  Future<void> lineWrap(int lines) {
+    throw UnimplementedError('lineWrap() has not been implemented.');
   }
 }

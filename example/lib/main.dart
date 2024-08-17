@@ -22,6 +22,7 @@ class _MyAppState extends State<MyApp> {
   String? _modal = 'unknown';
   String? _version = 'unknown';
   String? _serviceVersion = 'unknown';
+  int? _paper = 0;
   final _sunmiPrintersPlugin = SunmiPrinters();
 
   @override
@@ -38,6 +39,7 @@ class _MyAppState extends State<MyApp> {
     String? modal;
     String? version;
     String? serviceVersion;
+    int? paper;
     // Platform messages may fail, so we use a try/catch PlatformException.
     // We also handle the message potentially returning null.
     try {
@@ -46,6 +48,7 @@ class _MyAppState extends State<MyApp> {
       serial = await _sunmiPrintersPlugin.getPrinterSerialNumber();
       version = await _sunmiPrintersPlugin.getPrinterVersion();
       serviceVersion = await _sunmiPrintersPlugin.getServiceVersion();
+      paper = await _sunmiPrintersPlugin.getPrinterPaper();
     } on PlatformException {
       hasPrinter = false;
       status = PrinterStatus.UNKNOWN;
@@ -63,6 +66,7 @@ class _MyAppState extends State<MyApp> {
       _modal = modal;
       _version = version;
       _serviceVersion = serviceVersion;
+      _paper = paper;
     });
   }
 
@@ -84,11 +88,29 @@ class _MyAppState extends State<MyApp> {
               Text('Printer modal: $_modal'),
               Text('Printer version: $_version'),
               Text('Printer service version: $_serviceVersion'),
+              Text('Printer paper: $_paper'),
               ElevatedButton(
                 onPressed: () {
-                  _sunmiPrintersPlugin.printText('text');
+                  _sunmiPrintersPlugin.printText('text\n');
                 },
                 child: const Text('Print text'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _sunmiPrintersPlugin.printerSelfChecking();
+                },
+                child: const Text('Printer Self Checking'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _sunmiPrintersPlugin.startPrintTransaction(true);
+                  _sunmiPrintersPlugin.printColumnsText(List.generate(4, (index) {
+                    return TableColumn(text: 'cl $index', width: 8);
+                  }));
+                  _sunmiPrintersPlugin.commitPrintTransaction();
+                  _sunmiPrintersPlugin.exitPrintTransaction(true);
+                },
+                child: const Text('Print table'),
               ),
             ],
           ),

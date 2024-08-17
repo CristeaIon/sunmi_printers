@@ -1,12 +1,15 @@
 package com.example.sunmi_printers
 
 import SunmiPrinterApi
+import TransBean
+import android.graphics.BitmapFactory
 import android.util.Log
 import com.sunmi.peripheral.printer.InnerPrinterCallback
 import com.sunmi.peripheral.printer.InnerPrinterManager
 import com.sunmi.peripheral.printer.InnerResultCallback
 import com.sunmi.peripheral.printer.SunmiPrinterService
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import com.sunmi.peripheral.printer.TransBean as SunmiTransbean
 
 /** SunmiPrintersPlugin */
 class SunmiPrintersPlugin : FlutterPlugin, SunmiPrinterApi {
@@ -123,6 +126,98 @@ class SunmiPrintersPlugin : FlutterPlugin, SunmiPrinterApi {
 
     override fun setAlignment(alignment: Long) {
         printerService?.setAlignment(alignment.toInt(), resultCallback)
+    }
+
+    override fun printColumnsText(
+        columns: List<String>,
+        colsWidth: List<Long>,
+        colsAlign: List<Long>,
+    ) {
+        val textArray = columns.toTypedArray()
+        val widthArray = colsWidth.map { it.toInt() }.toIntArray()
+        val alignArray = colsAlign.map { it.toInt() }.toIntArray()
+
+        printerService?.printColumnsText(textArray, widthArray, alignArray, resultCallback)
+    }
+
+    override fun printColumnsString(
+        columns: List<String>,
+        colsWidth: List<Long>,
+        colsAlign: List<Long>,
+    ) {
+        val textArray = columns.toTypedArray()
+        val widthArray = colsWidth.map { it.toInt() }.toIntArray()
+        val alignArray = colsAlign.map { it.toInt() }.toIntArray()
+
+        printerService?.printColumnsString(textArray, widthArray, alignArray, resultCallback)
+    }
+
+    override fun printBitmap(image: ByteArray) {
+        val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
+
+        printerService?.printBitmap(bitmap, resultCallback)
+    }
+
+    override fun printBitmapCustom(image: ByteArray, type: Long) {
+        val bitmap = BitmapFactory.decodeByteArray(image, 0, image.size)
+
+        printerService?.printBitmapCustom(bitmap, type.toInt(), resultCallback)
+    }
+
+    override fun printBarCode(
+        data: String,
+        symbology: Long,
+        height: Long,
+        width: Long,
+        textPosition: Long,
+    ) {
+        printerService?.printBarCode(
+            data,
+            symbology.toInt(),
+            height.toInt(),
+            width.toInt(),
+            textPosition.toInt(),
+            resultCallback
+        )
+    }
+
+    override fun printQrCode(data: String, moduleSize: Long, errorLevel: Long) {
+        printerService?.printQRCode(data, moduleSize.toInt(), errorLevel.toInt(), resultCallback)
+    }
+
+    override fun print2DCode(data: String, symbology: Long, moduleSize: Long, errorLevel: Long) {
+        printerService?.print2DCode(
+            data,
+            symbology.toInt(),
+            moduleSize.toInt(),
+            errorLevel.toInt(),
+            resultCallback
+        )
+    }
+
+    override fun commitPrint(transBean: List<TransBean>) {
+        val parsed = transBean.map {
+            SunmiTransbean(
+                it.type!!.toByte(), it.text, it.data,
+            )
+        }
+        printerService?.commitPrint(parsed.toTypedArray(), resultCallback)
+    }
+
+    override fun enterPrinterBuffer(clean: Boolean) {
+        printerService?.enterPrinterBuffer(clean)
+    }
+
+    override fun exitPrinterBuffer(commit: Boolean) {
+        printerService?.exitPrinterBuffer(commit)
+    }
+
+    override fun commitPrinterBuffer() {
+        printerService?.commitPrinterBuffer()
+    }
+
+    override fun lineWrap(lines: Long) {
+        printerService?.lineWrap(lines.toInt(), resultCallback)
     }
 
 }

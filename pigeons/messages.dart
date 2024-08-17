@@ -7,6 +7,13 @@ import 'package:pigeon/pigeon.dart';
   kotlinOptions: KotlinOptions(),
   dartPackageName: 'sunmi_printers',
 ))
+class TransBean {
+  int? type;
+  String? text;
+  Uint8List? data;
+  // int get datalength => data?.length ?? 0;
+}
+
 @HostApi()
 abstract class SunmiPrinterApi {
   bool hasPrinter();
@@ -40,4 +47,32 @@ abstract class SunmiPrinterApi {
   int? getPrinterBBMDistance();
 
   void setAlignment(int alignment);
+
+  void printColumnsText(List<String> columns, List<int> colsWidth, List<int> colsAlign);
+
+  void printColumnsString(List<String> columns, List<int> colsWidth, List<int> colsAlign);
+
+  void printBitmap(Uint8List image);
+
+  void printBitmapCustom(Uint8List image, int type);
+
+  void printBarCode(String data, int symbology, int height, int width, int textPosition);
+
+  void printQrCode(String data, int moduleSize, int errorLevel);
+
+  void print2DCode(String data, int symbology, int moduleSize, int errorLevel);
+
+  void commitPrint(List<TransBean> transBean);
+
+  void enterPrinterBuffer(bool clean);
+
+  void exitPrinterBuffer(bool commit);
+
+  void commitPrinterBuffer();
+
+  void lineWrap(int lines);
+
+  void setFontSize(int size);
+
+  void setBold(bool bold);
 }

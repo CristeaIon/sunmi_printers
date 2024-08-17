@@ -41,6 +41,54 @@ class FlutterError (
   override val message: String? = null,
   val details: Any? = null
 ) : Throwable()
+
+/** Generated class from Pigeon that represents data sent in messages. */
+data class TransBean (
+  val type: Long? = null,
+  val text: String? = null,
+  val data: ByteArray? = null
+
+) {
+  companion object {
+    @Suppress("UNCHECKED_CAST")
+    fun fromList(list: List<Any?>): TransBean {
+      val type = list[0].let { if (it is Int) it.toLong() else it as Long? }
+      val text = list[1] as String?
+      val data = list[2] as ByteArray?
+      return TransBean(type, text, data)
+    }
+  }
+  fun toList(): List<Any?> {
+    return listOf<Any?>(
+      type,
+      text,
+      data,
+    )
+  }
+}
+@Suppress("UNCHECKED_CAST")
+private object SunmiPrinterApiCodec : StandardMessageCodec() {
+  override fun readValueOfType(type: Byte, buffer: ByteBuffer): Any? {
+    return when (type) {
+      128.toByte() -> {
+        return (readValue(buffer) as? List<Any?>)?.let {
+          TransBean.fromList(it)
+        }
+      }
+      else -> super.readValueOfType(type, buffer)
+    }
+  }
+  override fun writeValue(stream: ByteArrayOutputStream, value: Any?)   {
+    when (value) {
+      is TransBean -> {
+        stream.write(128)
+        writeValue(stream, value.toList())
+      }
+      else -> super.writeValue(stream, value)
+    }
+  }
+}
+
 /** Generated interface from Pigeon that represents a handler of messages from Flutter. */
 interface SunmiPrinterApi {
   fun hasPrinter(): Boolean
@@ -59,11 +107,25 @@ interface SunmiPrinterApi {
   fun getPrinterMode(): Long?
   fun getPrinterBBMDistance(): Long?
   fun setAlignment(alignment: Long)
+  fun printColumnsText(columns: List<String>, colsWidth: List<Long>, colsAlign: List<Long>)
+  fun printColumnsString(columns: List<String>, colsWidth: List<Long>, colsAlign: List<Long>)
+  fun printBitmap(image: ByteArray)
+  fun printBitmapCustom(image: ByteArray, type: Long)
+  fun printBarCode(data: String, symbology: Long, height: Long, width: Long, textPosition: Long)
+  fun printQrCode(data: String, moduleSize: Long, errorLevel: Long)
+  fun print2DCode(data: String, symbology: Long, moduleSize: Long, errorLevel: Long)
+  fun commitPrint(transBean: List<TransBean>)
+  fun enterPrinterBuffer(clean: Boolean)
+  fun exitPrinterBuffer(commit: Boolean)
+  fun commitPrinterBuffer()
+  fun lineWrap(lines: Long)
+  fun setFontSize(size: Long)
+  fun setBold(bold: Boolean)
 
   companion object {
     /** The codec used by SunmiPrinterApi. */
     val codec: MessageCodec<Any?> by lazy {
-      StandardMessageCodec()
+      SunmiPrinterApiCodec
     }
     /** Sets up an instance of `SunmiPrinterApi` to handle messages through the `binaryMessenger`. */
     @Suppress("UNCHECKED_CAST")
@@ -329,6 +391,284 @@ interface SunmiPrinterApi {
             var wrapped: List<Any?>
             try {
               api.setAlignment(alignmentArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.printColumnsText", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val columnsArg = args[0] as List<String>
+            val colsWidthArg = args[1] as List<Long>
+            val colsAlignArg = args[2] as List<Long>
+            var wrapped: List<Any?>
+            try {
+              api.printColumnsText(columnsArg, colsWidthArg, colsAlignArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.printColumnsString", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val columnsArg = args[0] as List<String>
+            val colsWidthArg = args[1] as List<Long>
+            val colsAlignArg = args[2] as List<Long>
+            var wrapped: List<Any?>
+            try {
+              api.printColumnsString(columnsArg, colsWidthArg, colsAlignArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.printBitmap", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val imageArg = args[0] as ByteArray
+            var wrapped: List<Any?>
+            try {
+              api.printBitmap(imageArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.printBitmapCustom", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val imageArg = args[0] as ByteArray
+            val typeArg = args[1].let { if (it is Int) it.toLong() else it as Long }
+            var wrapped: List<Any?>
+            try {
+              api.printBitmapCustom(imageArg, typeArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.printBarCode", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val dataArg = args[0] as String
+            val symbologyArg = args[1].let { if (it is Int) it.toLong() else it as Long }
+            val heightArg = args[2].let { if (it is Int) it.toLong() else it as Long }
+            val widthArg = args[3].let { if (it is Int) it.toLong() else it as Long }
+            val textPositionArg = args[4].let { if (it is Int) it.toLong() else it as Long }
+            var wrapped: List<Any?>
+            try {
+              api.printBarCode(dataArg, symbologyArg, heightArg, widthArg, textPositionArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.printQrCode", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val dataArg = args[0] as String
+            val moduleSizeArg = args[1].let { if (it is Int) it.toLong() else it as Long }
+            val errorLevelArg = args[2].let { if (it is Int) it.toLong() else it as Long }
+            var wrapped: List<Any?>
+            try {
+              api.printQrCode(dataArg, moduleSizeArg, errorLevelArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.print2DCode", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val dataArg = args[0] as String
+            val symbologyArg = args[1].let { if (it is Int) it.toLong() else it as Long }
+            val moduleSizeArg = args[2].let { if (it is Int) it.toLong() else it as Long }
+            val errorLevelArg = args[3].let { if (it is Int) it.toLong() else it as Long }
+            var wrapped: List<Any?>
+            try {
+              api.print2DCode(dataArg, symbologyArg, moduleSizeArg, errorLevelArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.commitPrint", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val transBeanArg = args[0] as List<TransBean>
+            var wrapped: List<Any?>
+            try {
+              api.commitPrint(transBeanArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.enterPrinterBuffer", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val cleanArg = args[0] as Boolean
+            var wrapped: List<Any?>
+            try {
+              api.enterPrinterBuffer(cleanArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.exitPrinterBuffer", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val commitArg = args[0] as Boolean
+            var wrapped: List<Any?>
+            try {
+              api.exitPrinterBuffer(commitArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.commitPrinterBuffer", codec)
+        if (api != null) {
+          channel.setMessageHandler { _, reply ->
+            var wrapped: List<Any?>
+            try {
+              api.commitPrinterBuffer()
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.lineWrap", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val linesArg = args[0].let { if (it is Int) it.toLong() else it as Long }
+            var wrapped: List<Any?>
+            try {
+              api.lineWrap(linesArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.setFontSize", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val sizeArg = args[0].let { if (it is Int) it.toLong() else it as Long }
+            var wrapped: List<Any?>
+            try {
+              api.setFontSize(sizeArg)
+              wrapped = listOf<Any?>(null)
+            } catch (exception: Throwable) {
+              wrapped = wrapError(exception)
+            }
+            reply.reply(wrapped)
+          }
+        } else {
+          channel.setMessageHandler(null)
+        }
+      }
+      run {
+        val channel = BasicMessageChannel<Any?>(binaryMessenger, "dev.flutter.pigeon.sunmi_printers.SunmiPrinterApi.setBold", codec)
+        if (api != null) {
+          channel.setMessageHandler { message, reply ->
+            val args = message as List<Any?>
+            val boldArg = args[0] as Boolean
+            var wrapped: List<Any?>
+            try {
+              api.setBold(boldArg)
               wrapped = listOf<Any?>(null)
             } catch (exception: Throwable) {
               wrapped = wrapError(exception)

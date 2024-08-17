@@ -3,9 +3,16 @@ import 'dart:typed_data';
 
 import 'package:sunmi_printers/src/enums/text_alignment.dart';
 import 'package:sunmi_printers/src/messages.dart';
+import 'package:sunmi_printers/src/utils/table_column.dart';
 
 import 'src/enums/printer_status.dart';
 import 'sunmi_printers_platform_interface.dart';
+
+typedef ParsedColumns = ({
+  List<String> colsText,
+  List<int> colsWidth,
+  List<int> colsAlign,
+});
 
 /// An implementation of [SunmiPrintersPlatform] that uses method channels.
 class MethodChannelSunmiPrinters extends SunmiPrintersPlatform {
@@ -104,10 +111,73 @@ class MethodChannelSunmiPrinters extends SunmiPrintersPlatform {
 
   @override
   Future<void> setAlignment(TextAlignment alignment) {
-    return api.setAlignment(switch (alignment) {
+    return api.setAlignment(_returnAlignmentAsInt(alignment));
+  }
+
+  @override
+  Future<void> printColumnsText(List<TableColumn> columns) {
+    final parsedColumns = _parseColumns(columns);
+
+    return api.printColumnsText(
+      parsedColumns.colsText,
+      parsedColumns.colsWidth,
+      parsedColumns.colsAlign,
+    );
+  }
+
+  @override
+  Future<void> printColumnsString(List<TableColumn> columns) {
+    final parsedColumns = _parseColumns(columns);
+
+    return api.printColumnsString(
+      parsedColumns.colsText,
+      parsedColumns.colsWidth,
+      parsedColumns.colsAlign,
+    );
+  }
+
+  @override
+  Future<void> printImage(Uint8List image) {
+    return api.printBitmap(image);
+  }
+
+  @override
+  Future<void> printImageCustom(Uint8List image) {
+    return api.printBitmapCustom(image, 0);
+  }
+
+  @override
+  Future<void> enterPrinterBuffer(bool clean) {
+    return api.enterPrinterBuffer(clean);
+  }
+
+  @override
+  Future<void> exitPrinterBuffer(bool commit) {
+    return api.exitPrinterBuffer(commit);
+  }
+
+  @override
+  Future<void> commitPrinterBuffer() {
+    return api.commitPrinterBuffer();
+  }
+
+  ParsedColumns _parseColumns(List<TableColumn> columns) {
+    List<String> colsText = List.empty(growable: true);
+    List<int> colsWidth = List.empty(growable: true);
+    List<int> colsAlign = List.empty(growable: true);
+    for (final col in columns) {
+      colsText.add(col.text);
+      colsWidth.add(col.width);
+      colsAlign.add(_returnAlignmentAsInt(col.align));
+    }
+    return (colsText: colsText, colsWidth: colsWidth, colsAlign: colsAlign);
+  }
+
+  int _returnAlignmentAsInt(TextAlignment alignment) {
+    return switch (alignment) {
       TextAlignment.LEFT => 0,
       TextAlignment.CENTER => 1,
       TextAlignment.RIGHT => 2,
-    });
+    };
   }
 }
